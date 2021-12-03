@@ -1,6 +1,7 @@
 const part1 = (binaryStrings) => {
   let gammaRate = '';
   let epsilonRate = '';
+
   // Assumes that all binary strings provided are the same length
   for (let col = 0; col < binaryStrings[0].length; col++) {
     let oneCount = 0;
@@ -12,6 +13,7 @@ const part1 = (binaryStrings) => {
         zeroCount++;
       }
     }
+
     if (oneCount > zeroCount) {
       gammaRate = gammaRate.concat('1');
       epsilonRate = epsilonRate.concat('0');
@@ -20,7 +22,8 @@ const part1 = (binaryStrings) => {
       epsilonRate = epsilonRate.concat('1');
     }
   }
-  return parseInt(gammaRate, 2) * parseInt(epsilonRate, 2);
+
+  return [gammaRate, epsilonRate];
 };
 
 export default part1;

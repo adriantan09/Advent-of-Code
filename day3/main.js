@@ -1,16 +1,15 @@
 import fs from 'fs';
-import part1 from './part1.js';
-import part2 from './part2.js';
+import { gammaRate, epsilonRate } from './part1.js';
+import { oxygenRating, co2Rating } from './part2.js';
 
-let binaryStrings = fs.readFileSync('example.txt', 'utf-8');
+let binaryStrings = fs.readFileSync('input.txt', 'utf-8');
+binaryStrings = binaryStrings.split('\n');
 
-binaryStrings = binaryStrings.split('\r\n');
+const gamma = gammaRate(binaryStrings);
+const epsilon = epsilonRate(gammaRate(binaryStrings));
+console.log('Power Consumption:', parseInt(gamma, 2) * parseInt(epsilon, 2));
 
-const [gammaRate, epsilonRate] = part1(binaryStrings);
+const oxygen = oxygenRating([...binaryStrings], 0);
+const co2 = co2Rating([...binaryStrings], 0);
 
-// console.log(
-//   'Power Consumption:',
-//   parseInt(gammaRate, 2) * parseInt(epsilonRate, 2)
-// );
-
-console.log('Life Support Rating:', part2(binaryStrings));
+console.log('Life Support Rating:', parseInt(oxygen, 2) * parseInt(co2, 2));

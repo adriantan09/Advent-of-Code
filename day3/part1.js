@@ -1,8 +1,6 @@
-const part1 = (binaryStrings) => {
+export const gammaRate = (binaryStrings) => {
   let gammaRate = '';
-  let epsilonRate = '';
 
-  // Assumes that all binary strings provided are the same length
   for (let col = 0; col < binaryStrings[0].length; col++) {
     let oneCount = 0;
     let zeroCount = 0;
@@ -14,16 +12,19 @@ const part1 = (binaryStrings) => {
       }
     }
 
-    if (oneCount > zeroCount) {
+    if (oneCount >= zeroCount) {
       gammaRate = gammaRate.concat('1');
-      epsilonRate = epsilonRate.concat('0');
     } else {
       gammaRate = gammaRate.concat('0');
-      epsilonRate = epsilonRate.concat('1');
     }
   }
-
-  return [gammaRate, epsilonRate];
+  return gammaRate;
 };
 
-export default part1;
+export const epsilonRate = (binaryString) => {
+  let invert = '';
+  for (let bit of binaryString) {
+    bit === '1' ? (invert = invert.concat('0')) : (invert = invert.concat('1'));
+  }
+  return invert;
+};

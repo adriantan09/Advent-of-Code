@@ -2,9 +2,108 @@ import fs from 'fs';
 import part1 from './part1.js';
 import part2 from './part2.js';
 
-let instructions = fs.readFileSync('example.txt', 'utf-8');
+let input = fs.readFileSync('input.txt', 'utf-8');
 
-instructions = instructions.split('\r\n');
+input = input.split('\n').filter((i) => i !== '');
+// console.log(input);
 
-console.log('', part1(instructions));
-console.log('', part2(instructions));
+const draw = input[0].split(',').map((i) => parseInt(i, 10));
+// console.log('draw:', draw);
+
+const sumWinningBoard = (board) => {
+  const boardSum = []
+    .concat(...boards[board])
+    .filter((e) => e !== -1)
+    .reduce((a, b) => a + b);
+  return boardSum;
+};
+
+const checkWin = (boards, lastNumPicked) => {
+  const horizontalWinBoard = checkHorizontalWin(boards);
+  if (horizontalWinBoard !== -1) {
+    console.log('BINGO!');
+    console.log(lastNumPicked * sumWinningBoard(horizontalWinBoard));
+    return true;
+  }
+
+  const verticalWinBoard = checkVerticalWin(boards);
+  if (verticalWinBoard !== -1) {
+    console.log('BINGO!');
+    console.log(lastNumPicked * sumWinningBoard(verticalWinBoard));
+    return true;
+  }
+
+  return false;
+};
+
+// Check to see if a board has filled a row
+// returns true if there is otherwise false
+const checkHorizontalWin = (boards) => {
+  for (let board = 0; board < boards.length; board++) {
+    for (let row = 0; row < 5; row++) {
+      if (boards[board][row].filter((e) => e < 0).length === 5) {
+        return board;
+      }
+    }
+  }
+  return -1;
+};
+
+// Check to see if a board has filled a column
+// returns true if there is otherwise false
+const checkVerticalWin = (boards) => {
+  for (let board = 0; board < boards.length; board++) {
+    for (let col = 0; col < 5; col++) {
+      let colCount = 0;
+      for (let row = 0; row < 5; row++) {
+        if (boards[board][row][col] === -1) colCount++;
+      }
+
+      if (colCount === 5) {
+        return board;
+      }
+    }
+  }
+  return -1;
+};
+
+// Convert the input into 5x5 2d arrays
+const generateBoards = (input) => {
+  const boards = [];
+  for (let i = 1; i <= input.length - 1; i += 5) {
+    const board = [];
+    for (let j = i; j < i + 5; j++) {
+      board.push(
+        input[j]
+          .split(' ')
+          .filter((i) => i !== '')
+          .map((i) => parseInt(i, 10))
+      );
+    }
+    boards.push(board);
+  }
+  return boards;
+};
+
+const boards = generateBoards(input);
+
+for (let currDraw = 0; currDraw < draw.length; currDraw++) {
+  boards.forEach((board) => {
+    board.forEach((row) => {
+      if (row.includes(draw[currDraw])) {
+        row[row.indexOf(draw[currDraw])] = -1;
+      }
+    });
+  });
+
+  if (currDraw >= 5) {
+    if (checkWin(boards, draw[currDraw])) break;
+  }
+}
+
+// console.log(boards);
+
+// console.log(boards);
+
+// console.log('', part1(input));
+// console.log('', part2(input));

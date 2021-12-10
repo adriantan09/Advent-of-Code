@@ -4,32 +4,42 @@ import part2 from './part2.js';
 
 let input = fs.readFileSync('input.txt', 'utf-8');
 
-input = input.split('\n').filter((i) => i !== '');
-// console.log(input);
+input = input.split('\r\n').filter((i) => i !== '');
+
+// console.log('', part1(input));
 
 const draw = input[0].split(',').map((i) => parseInt(i, 10));
-// console.log('draw:', draw);
 
-const sumWinningBoard = (board) => {
-  const boardSum = []
-    .concat(...boards[board])
-    .filter((e) => e !== -1)
-    .reduce((a, b) => a + b);
-  return boardSum;
+const checkLastWin = (boards) => {
+  const horizontalWinBoard = checkHorizontalWin(boards);
+  if (horizontalWinBoard !== -1) {
+    remainingBoards.splice(horizontalWinBoard, 1);
+  }
+
+  const verticalWinBoard = checkVerticalWin(boards);
+  if (verticalWinBoard !== -1) {
+    remainingBoards.splice(verticalWinBoard, 1);
+  }
+
+  if (remainingBoards.length === 1) {
+    return remainingBoards[0].index;
+  }
+
+  return -1;
 };
 
 const checkWin = (boards, lastNumPicked) => {
   const horizontalWinBoard = checkHorizontalWin(boards);
   if (horizontalWinBoard !== -1) {
     console.log('BINGO!');
-    console.log(lastNumPicked * sumWinningBoard(horizontalWinBoard));
+    console.log(lastNumPicked * sumBoard(horizontalWinBoard));
     return true;
   }
 
   const verticalWinBoard = checkVerticalWin(boards);
   if (verticalWinBoard !== -1) {
     console.log('BINGO!');
-    console.log(lastNumPicked * sumWinningBoard(verticalWinBoard));
+    console.log(lastNumPicked * sumBoard(verticalWinBoard));
     return true;
   }
 
@@ -41,7 +51,7 @@ const checkWin = (boards, lastNumPicked) => {
 const checkHorizontalWin = (boards) => {
   for (let board = 0; board < boards.length; board++) {
     for (let row = 0; row < 5; row++) {
-      if (boards[board][row].filter((e) => e < 0).length === 5) {
+      if (boards[board].board[row].filter((e) => e < 0).length === 5) {
         return board;
       }
     }
@@ -56,7 +66,7 @@ const checkVerticalWin = (boards) => {
     for (let col = 0; col < 5; col++) {
       let colCount = 0;
       for (let row = 0; row < 5; row++) {
-        if (boards[board][row][col] === -1) colCount++;
+        if (boards[board].board[row][col] === -1) colCount++;
       }
 
       if (colCount === 5) {
@@ -71,39 +81,48 @@ const checkVerticalWin = (boards) => {
 const generateBoards = (input) => {
   const boards = [];
   for (let i = 1; i <= input.length - 1; i += 5) {
-    const board = [];
+    const board = { board: [], index: 0 };
     for (let j = i; j < i + 5; j++) {
-      board.push(
+      board.board.push(
         input[j]
           .split(' ')
           .filter((i) => i !== '')
           .map((i) => parseInt(i, 10))
       );
     }
+    board.index = (i - 1) / 5;
     boards.push(board);
   }
   return boards;
 };
 
 const boards = generateBoards(input);
+const remainingBoards = [...boards];
 
 for (let currDraw = 0; currDraw < draw.length; currDraw++) {
   boards.forEach((board) => {
-    board.forEach((row) => {
+    board.board.forEach((row) => {
       if (row.includes(draw[currDraw])) {
         row[row.indexOf(draw[currDraw])] = -1;
       }
     });
   });
 
-  if (currDraw >= 5) {
-    if (checkWin(boards, draw[currDraw])) break;
+  // if (checkWin(boards, draw[currDraw])) break;
+
+  const lastBoard = checkLastWin(remainingBoards);
+  if (lastBoard !== -1) {
+    console.log(
+      'Final Score:',
+      (sumBoard(lastBoard) - draw[currDraw + 1]) * draw[currDraw + 1]
+    );
   }
 }
 
-// console.log(boards);
-
-// console.log(boards);
-
-// console.log('', part1(input));
-// console.log('', part2(input));
+function sumBoard(board) {
+  const boardSum = []
+    .concat(...boards[board].board)
+    .filter((e) => e !== -1)
+    .reduce((a, b) => a + b);
+  return boardSum;
+}

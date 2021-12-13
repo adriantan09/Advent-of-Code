@@ -8,19 +8,35 @@ input = input.split('\n');
 const filterInput = (input) => {
   const hLines = [];
   const vLines = [];
+  const dLines = [];
+
   input.forEach((line) => {
     line = line.match(/\d+/g).map((num) => parseInt(num, 10));
 
-    // part 1: only consider horizontal and vertical lines
     line = { startX: line[0], startY: line[1], endX: line[2], endY: line[3] };
 
     if (line.startX === line.endX) {
+      if (line.startY > line.endY) {
+        [line.startY, line.endY] = [line.endY, line.startY];
+      }
       vLines.push(line);
     } else if (line.startY === line.endY) {
+      if (line.startX > line.endX) {
+        [line.startX, line.endX] = [line.endX, line.startX];
+      }
       hLines.push(line);
+    } else {
+      if (
+        (line.startX > line.endX && line.startY > line.endY) ||
+        (line.startX < line.endX && line.startY > line.endY)
+      ) {
+        [line.startX, line.endX] = [line.endX, line.startX];
+        [line.startY, line.endY] = [line.endY, line.startY];
+      }
+      dLines.push(line);
     }
   });
-  return { horizontal: hLines, vertical: vLines };
+  return { horizontal: hLines, vertical: vLines, diagonal: dLines };
 };
 
 input = filterInput(input);
@@ -28,25 +44,31 @@ input = filterInput(input);
 const matrix = new Array(1000).fill(0).map(() => new Array(1000).fill(0));
 
 input.vertical.forEach((line) => {
-  if (line.startY < line.endY) {
-    for (let i = line.startY; i <= line.endY; i++) {
-      matrix[i][line.startX]++;
-    }
-  } else {
-    for (let i = line.startY; i >= line.endY; i--) {
-      matrix[i][line.startX]++;
-    }
+  // top -> bottom
+  for (let y = line.startY; y <= line.endY; y++) {
+    matrix[y][line.startX]++;
   }
 });
 
 input.horizontal.forEach((line) => {
-  if (line.startX < line.endX) {
-    for (let i = line.startX; i <= line.endX; i++) {
-      matrix[line.startY][i]++;
+  // left -> right
+  for (let x = line.startX; x <= line.endX; x++) {
+    matrix[line.startY][x]++;
+  }
+});
+
+input.diagonal.forEach((line) => {
+  if (line.startX < line.endX && line.startY < line.endY) {
+    // top left -> bottom right
+    for (let x = line.startX, y = line.startY; x <= line.endX; x++, y++) {
+      matrix[y][x]++;
     }
   } else {
-    for (let i = line.startX; i >= line.endX; i--) {
-      matrix[line.startY][i]++;
+    // top right -> bottom left
+    // console.log('top right -> bottom left');
+    // console.log('x: ' + line.startX + ' y: ' + line.startY);
+    for (let x = line.startX, y = line.startY; x >= line.endX; x--, y++) {
+      matrix[y][x]++;
     }
   }
 });

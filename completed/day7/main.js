@@ -6,5 +6,5 @@ let instructions = fs.readFileSync('input.txt', 'utf-8');
 
 instructions = instructions.split(',').map((e) => parseInt(e, 10));
 
-console.log('Fuel:', part1(instructions));
-// console.log('', part2(instructions));
+console.log('Fuel (part 1):', part1(instructions));
+console.log('Fuel (part 2):', part2(instructions));

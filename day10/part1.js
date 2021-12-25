@@ -1,7 +1,6 @@
-const openingBrackets = ['(', '[', '{', '<']
-const closingBrackets = [')', ']', '}', '>']
+import { openingBrackets, closingBrackets } from './data.js'
 
-const part1 = (lines) => {
+export const part1 = (lines) => {
   let totalError = 0
   lines.forEach(line => {
     const bracket = checkInvalidBracket(line)
@@ -23,7 +22,7 @@ const part1 = (lines) => {
   return totalError
 };
 
-const checkInvalidBracket = (line) => {
+export const checkInvalidBracket = (line) => {
   const bracketStack = []
   for (let char of line) {
     if (openingBrackets.includes(char)) {
@@ -38,7 +37,6 @@ const checkInvalidBracket = (line) => {
       }
     }
   }
-  return null
+  return bracketStack
 }
 
-export default part1;

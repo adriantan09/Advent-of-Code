@@ -1,11 +1,11 @@
-const part2 = (instructions) => {
-  let horizontalPos = 0;
-  let depthPos = 0;
-  let aim = 0;
+const part2 = (instructions: string[]) => {
+  let horizontalPos: number = 0;
+  let depthPos: number = 0;
+  let aim: number = 0;
 
   instructions.forEach((step) => {
-    const instruction = step.split(' ')[0];
-    const value = parseInt(step.split(' ')[1]);
+    const instruction: string = step.split(' ')[0];
+    const value: number = parseInt(step.split(' ')[1]);
 
     switch (instruction) {
       case 'forward':

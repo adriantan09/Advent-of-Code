@@ -1,9 +1,9 @@
-const part2 = (instructions: string[]) => {
+const part2 = (instructions: string[]): number => {
   let horizontalPos: number = 0;
   let depthPos: number = 0;
   let aim: number = 0;
 
-  instructions.forEach((step) => {
+  instructions.forEach((step: string) => {
     const instruction: string = step.split(' ')[0];
     const value: number = parseInt(step.split(' ')[1]);
 

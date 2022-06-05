@@ -6,5 +6,5 @@ let instructions: string[] = fs
     .readFileSync('input.txt', 'utf-8')
     .split('\n');
 
-console.log('Part 1: Horizontal Pos * Depth Pos =', part1(instructions));
-console.log('Part 2: Horizontal Pos * Depth Pos =', part2(instructions));
+console.log('Part 1:', part1(instructions));
+console.log('Part 2:', part2(instructions));

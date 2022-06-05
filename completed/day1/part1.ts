@@ -1,7 +1,7 @@
-const countDepthIncrease = (depths: number[]) => {
+const countDepthIncrease = (depths: number[]): number => {
   let increaseCount: number = 0;
-  for (let idx: number = 1; idx < depths.length; idx++) {
-    if (depths[idx] > depths[idx - 1]) { increaseCount++; }
+  for (let i = 1; i < depths.length; i++) {
+    if (depths[i] > depths[i - 1]) { increaseCount++; }
   }
   return increaseCount;
 }
